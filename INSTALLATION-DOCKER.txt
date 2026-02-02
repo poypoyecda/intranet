@@ -1,0 +1,175 @@
+================================================================================
+GUIDE D'INSTALLATION - ENVIRONNEMENT DOCKER POUR PROJET INTRANET
+================================================================================
+
+📋 PRÉ-REQUIS
+--------------------------------------------------------------------------------
+Avant de commencer, assurez-vous d'avoir installé sur votre machine :
+
+1. Docker Desktop pour Windows
+   - Télécharger depuis : https://www.docker.com/products/docker-desktop/
+   - Version minimale : 20.10 ou supérieure
+
+2. Docker Compose (inclus avec Docker Desktop)
+   - Version minimale : 2.0 ou supérieure
+
+
+🚀 INSTALLATION ET DÉMARRAGE
+--------------------------------------------------------------------------------
+
+ÉTAPE 1 : Vérifier l'installation de Docker
+--------------------------------------------
+Ouvrez PowerShell ou l'invite de commande et exécutez :
+
+    docker --version
+    docker-compose --version
+
+Vous devriez voir les versions installées s'afficher.
+
+
+ÉTAPE 2 : Naviguer vers le dossier du projet
+---------------------------------------------
+Dans PowerShell ou l'invite de commande :
+
+    cd C:\Users\poypo\Documents\intranet
+
+
+ÉTAPE 3 : Construire et démarrer les conteneurs
+------------------------------------------------
+Exécutez la commande suivante :
+
+    docker-compose up -d --build
+
+Explications :
+- "up" : démarre les services
+- "-d" : mode détaché (en arrière-plan)
+- "--build" : reconstruit les images Docker
+
+Cette commande va :
+✓ Construire l'image Docker pour l'application web
+✓ Télécharger les images MySQL et PhpMyAdmin
+✓ Créer et démarrer tous les conteneurs
+✓ Créer le réseau et les volumes nécessaires
+
+
+ÉTAPE 4 : Vérifier que les conteneurs sont en cours d'exécution
+----------------------------------------------------------------
+    docker-compose ps
+
+Vous devriez voir 3 services actifs :
+- intranet_web
+- intranet_db
+- intranet_phpmyadmin
+
+
+📍 ACCÈS AUX SERVICES
+--------------------------------------------------------------------------------
+
+Application Web :
+    URL : http://localhost:8080
+    
+PhpMyAdmin (gestion base de données) :
+    URL : http://localhost:8081
+    Utilisateur : root
+    Mot de passe : root_password
+
+Base de données MySQL :
+    Hôte : localhost
+    Port : 3306
+    Base de données : intranet
+    Utilisateur : intranet_user
+    Mot de passe : intranet_password
+
+
+🛠️ COMMANDES UTILES
+--------------------------------------------------------------------------------
+
+Démarrer les conteneurs :
+    docker-compose start
+
+Arrêter les conteneurs :
+    docker-compose stop
+
+Redémarrer les conteneurs :
+    docker-compose restart
+
+Voir les logs en temps réel :
+    docker-compose logs -f
+
+Voir les logs d'un service spécifique :
+    docker-compose logs -f web
+    docker-compose logs -f db
+
+Arrêter et supprimer les conteneurs :
+    docker-compose down
+
+Arrêter et supprimer les conteneurs + volumes (⚠️ ATTENTION : supprime les données) :
+    docker-compose down -v
+
+Entrer dans un conteneur (mode interactif) :
+    docker exec -it intranet_web bash
+    docker exec -it intranet_db bash
+
+Reconstruire les images :
+    docker-compose build --no-cache
+
+
+🔧 CONFIGURATION
+--------------------------------------------------------------------------------
+
+Variables d'environnement :
+Les paramètres de connexion à la base de données sont définis dans le fichier
+docker-compose.yml. Vous pouvez les modifier selon vos besoins.
+
+Fichier d'initialisation de la base de données :
+Le fichier init.sql contient le script SQL exécuté automatiquement lors de la
+première création de la base de données. Ajoutez-y vos tables et données initiales.
+
+Ports :
+- Application web : 8080 (modifiable dans docker-compose.yml)
+- PhpMyAdmin : 8081 (modifiable dans docker-compose.yml)
+- MySQL : 3306 (modifiable dans docker-compose.yml)
+
+
+📝 DÉVELOPPEMENT
+--------------------------------------------------------------------------------
+
+Les fichiers du projet sont synchronisés en temps réel avec le conteneur grâce
+aux volumes Docker. Toute modification de code est immédiatement prise en compte.
+
+Structure du projet :
+- controller/  : Contrôleurs MVC
+- model/       : Modèles MVC
+- view/        : Vues MVC
+- asset/       : Ressources (CSS, JS, images)
+
+
+❗ DÉPANNAGE
+--------------------------------------------------------------------------------
+
+Problème : Les conteneurs ne démarrent pas
+Solution : Vérifiez que Docker Desktop est bien lancé et que les ports 8080, 8081
+          et 3306 ne sont pas déjà utilisés par d'autres applications.
+
+Problème : Erreur de connexion à la base de données
+Solution : Attendez quelques secondes que MySQL soit complètement initialisé.
+          Vous pouvez vérifier avec : docker-compose logs db
+
+Problème : Permission denied sur Linux/Mac
+Solution : Ajustez les permissions avec : sudo chown -R $USER:$USER .
+
+Problème : Modifications non prises en compte
+Solution : Videz le cache du navigateur ou redémarrez les conteneurs.
+
+
+📞 SUPPORT
+--------------------------------------------------------------------------------
+
+Pour plus d'informations sur Docker :
+- Documentation officielle : https://docs.docker.com/
+- Docker Compose : https://docs.docker.com/compose/
+
+
+================================================================================
+Dernière mise à jour : février 2026
+================================================================================

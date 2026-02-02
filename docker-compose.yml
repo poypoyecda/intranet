@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Service web (PHP + Apache)
+  web:
+    build: .
+    container_name: intranet_web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - intranet_network
+    environment:
+      - DB_HOST=db
+      - DB_NAME=intranet
+      - DB_USER=intranet_user
+      - DB_PASSWORD=intranet_password
+
+  # Service base de données MySQL
+  db:
+    image: mysql:8.0
+    container_name: intranet_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - intranet_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: intranet
+      MYSQL_USER: intranet_user
+      MYSQL_PASSWORD: intranet_password
+
+  # PhpMyAdmin pour la gestion de la base de données
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: intranet_phpmyadmin
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - intranet_network
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+
+networks:
+  intranet_network:
+    driver: bridge
+
+volumes:
+  db_data:
