@@ -1,0 +1,101 @@
+.container-fluid1 {
+    background: linear-gradient(135deg, #a2afed 0%, #c46e18 100%);
+    width: 100%;
+    align-items: center;
+    display: flex;
+}
+
+.container-fluid1 .nav-item {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.container-fluid1 .nav-link {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1a1a1a !important;
+    padding: 12px 20px;
+}
+
+.container-fluid1 .nav-link:hover {
+    color: #000000 !important;
+}
+
+.jadenet {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 48px;
+    background: linear-gradient(90deg, #2ecc71, #8b6f47, #3498db, #2ecc71);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+    margin-left: 20px;
+    align-items: center;
+    font-weight: 400;
+    letter-spacing: 1px;
+    -webkit-text-stroke: 0.5px black;
+    text-stroke: 0.5px black;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.titrehome {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 36px;
+    text-align: center;
+    margin-top: 50px;
+    color: #2c3e50;
+}
+
+.citation {
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 15vh;
+    margin-bottom: 50px;
+    color: #03070a;
+    font-style: italic;
+    position: relative;
+    z-index: 10;
+    background-color: rgba(200, 200, 200, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bodyhome {
+    background: linear-gradient(135deg, #667eea 0%, #b65f07 100%);
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.bodyhome::before {
+    content: '';
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 80px);
+    background-image: url('../images/feuille.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.7;
+    pointer-events: none;
+}

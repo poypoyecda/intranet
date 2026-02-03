@@ -17,7 +17,10 @@ RUN echo '<Directory /var/www/html>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' > /etc/apache2/conf-available/project.conf && \
+</Directory>\n\
+<IfModule dir_module>\n\
+    DirectoryIndex index.php index.html\n\
+</IfModule>' > /etc/apache2/conf-available/project.conf && \
     a2enconf project
 
 EXPOSE 80
