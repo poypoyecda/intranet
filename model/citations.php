@@ -22,6 +22,18 @@ class Citation {
         return $stmt;
     }
 
+    // Récupérer les citations avec pagination
+    public function getPaginated($offset, $limit) {
+        $query = "SELECT id, nom, description FROM " . $this->table_name . " ORDER BY id ASC LIMIT :limit OFFSET :offset";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt;
+    }
+
     // Récupérer une citation par ID
     public function getById($id) {
         $query = "SELECT id, nom, description FROM " . $this->table_name . " WHERE id = :id LIMIT 1";
@@ -92,6 +104,53 @@ class Citation {
         }
         
         return false;
+    }
+
+    // CREATE - Créer une nouvelle citation
+    public function create() {
+        $query = "INSERT INTO " . $this->table_name . " 
+                  (nom, description) 
+                  VALUES (:nom, :description)";
+        
+        $stmt = $this->conn->prepare($query);
+        
+        // Bind des paramètres
+        $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':description', $this->description);
+        
+        if ($stmt->execute()) {
+            $this->id = $this->conn->lastInsertId();
+            return true;
+        }
+        
+        return false;
+    }
+
+    // UPDATE - Mettre à jour une citation
+    public function update() {
+        $query = "UPDATE " . $this->table_name . " 
+                  SET nom = :nom, 
+                      description = :description 
+                  WHERE id = :id";
+        
+        $stmt = $this->conn->prepare($query);
+        
+        // Bind des paramètres
+        $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':description', $this->description);
+        $stmt->bindParam(':id', $this->id);
+        
+        return $stmt->execute();
+    }
+
+    // DELETE - Supprimer une citation
+    public function delete() {
+        $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        
+        return $stmt->execute();
     }
 }
 ?>

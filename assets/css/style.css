@@ -1,5 +1,5 @@
 .container-fluid1 {
-    background: linear-gradient(135deg, #a2afed 0%, #c46e18 100%);
+    background: linear-gradient(135deg, #a0ffc2 0%, #42ab59, #009626 100%);
     width: 100%;
     align-items: center;
     display: flex;
@@ -78,7 +78,7 @@
 }
 
 .bodyhome {
-    background: linear-gradient(135deg, #667eea 0%, #b65f07 100%);
+    background: linear-gradient(135deg, #a0ffc2 0%, #42ab59, #009626 100%);
     height: 100vh;
     margin: 0;
     padding: 0;
@@ -96,6 +96,6 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    opacity: 0.7;
+    opacity: 0.9;
     pointer-events: none;
 }
