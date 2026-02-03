@@ -11,7 +11,7 @@ unset($_SESSION['login_error']);
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid1">
-        <img src="../../assets/images/feuille.png" alt="Feuille logo" width="70" height="70" class="d-inline-block align-text-top">
+        <img src="../../assets/images/feuille.png" alt="Feuille logo" width="70" height="70" class="d-inline-block align-text-top" style="margin-left: 20px;">
         <h1 class="jadenet">Jade.Net</h1>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <?php if ($isLoggedIn): ?>
@@ -37,19 +37,22 @@ unset($_SESSION['login_error']);
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Liste des comptes</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Budgets</a></li>            
-                    <li><a class="dropdown-item" href="#">Echeanciers</a></li>
+                    <li><a class="dropdown-item" href="#">Catégories de budget</a></li>            
+                    <li><a class="dropdown-item" href="#">Liste des écheanciers</a></li>
                 </ul>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="/view/front/espace-personnel.php">Espace Personnel</a>
                 </li>
                 <?php if ($currentUser && $currentUser['admin'] == 1): ?>
-                <li class="nav-item">
-                <a class="nav-link" href="/view/front/gestion-utilisateurs.php">Gestion des utilisateurs</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/view/front/gestion-citations.php">Gestion des citations</a>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Administration
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/view/front/gestion-utilisateurs.php">Gestion des utilisateurs</a></li>
+                    <li><a class="dropdown-item" href="/view/front/gestion-citations.php">Gestion des citations</a></li>
+                </ul>
                 </li>
                 <?php endif; ?>
             </ul>
@@ -57,7 +60,7 @@ unset($_SESSION['login_error']);
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
             <?php endif; ?>
             
-            <div class="d-flex flex-column align-items-end" style="margin-right: 50px; position: relative;">
+            <div class="d-flex flex-column align-items-end" style="margin-right: 20px; position: relative;">
                 <?php if ($isLoggedIn && $currentUser): ?>
                     <div class="d-flex align-items-center gap-3">
                         <span class="fw-semibold text-dark" style="font-size: 16px;">

@@ -45,7 +45,7 @@ class User {
     public function getAll() {
         $query = "SELECT id, username, email, admin, date_creation, date_modification 
                   FROM " . $this->table_name . " 
-                  ORDER BY date_creation DESC";
+                  ORDER BY id ASC";
         
         $stmt = $this->conn->prepare($query);
         $stmt->execute();

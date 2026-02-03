@@ -25,7 +25,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
     <?php include_once __DIR__ . '/../templates/header.php'; ?>
     
     <div class="container mt-5">
-        <h1 class="mb-4 text-center">Espace Personnel</h1>
+        <h1 class="mb-4 text-center page-title">Espace Personnel</h1>
         
         <?php if ($successMessage): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">

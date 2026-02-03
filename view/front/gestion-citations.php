@@ -34,7 +34,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
     <?php include_once __DIR__ . '/../templates/header.php'; ?>
     
     <div class="container mt-3">
-        <h1 class="mb-3 text-center">Gestion des Citations</h1>
+        <h1 class="mb-3 text-center page-title">Gestion des Citations</h1>
         
         <?php if ($successMessage): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -51,7 +51,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
         <?php endif; ?>
         
         <div class="mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCitationModal">
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCitationModal">
                 <i class="bi bi-plus-circle"></i> Ajouter une citation
             </button>
         </div>
