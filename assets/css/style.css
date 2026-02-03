@@ -5,6 +5,22 @@
     display: flex;
 }
 
+.container-fluid1 .nav-item {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.container-fluid1 .nav-link {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1a1a1a !important;
+    padding: 12px 20px;
+}
+
+.container-fluid1 .nav-link:hover {
+    color: #000000 !important;
+}
+
 .jadenet {
     font-family: 'Georgia', 'Times New Roman', serif;
     font-size: 48px;
@@ -47,6 +63,7 @@
     font-size: 18px;
     text-align: center;
     margin-top: 15vh;
+    margin-bottom: 50px;
     color: #03070a;
     font-style: italic;
     position: relative;
@@ -79,6 +96,6 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    opacity: 0.5;
+    opacity: 0.7;
     pointer-events: none;
 }

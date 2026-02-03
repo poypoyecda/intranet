@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // Récupérer la citation du jour via le controller
 require_once __DIR__ . '/../../controller/citations.php';
 
