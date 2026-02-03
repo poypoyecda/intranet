@@ -181,5 +181,233 @@ class UserController {
         }
         return null;
     }
+
+    // GESTION ADMIN - Gérer la création d'un utilisateur (requiert admin)
+    public function handleCreateUser() {
+        if (!$this->isAdmin()) {
+            $_SESSION['error_message'] = 'Accès non autorisé.';
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = trim($_POST['username'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $email = trim($_POST['email'] ?? '');
+            $admin = (int)($_POST['admin'] ?? 0);
+            
+            if (empty($username) || empty($password) || empty($email)) {
+                $_SESSION['error_message'] = 'Tous les champs sont requis.';
+                header('Location: /view/front/gestion-utilisateurs.php');
+                exit();
+            }
+            
+            if (strlen($password) < 6) {
+                $_SESSION['error_message'] = 'Le mot de passe doit contenir au moins 6 caractères.';
+                header('Location: /view/front/gestion-utilisateurs.php');
+                exit();
+            }
+            
+            $result = $this->createUser($username, $password, $email, $admin);
+            
+            if ($result['success']) {
+                $_SESSION['success_message'] = $result['message'];
+            } else {
+                $_SESSION['error_message'] = $result['message'];
+            }
+        }
+
+        header('Location: /view/front/gestion-utilisateurs.php');
+        exit();
+    }
+
+    // GESTION ADMIN - Gérer la mise à jour d'un utilisateur (requiert admin)
+    public function handleUpdateUser() {
+        if (!$this->isAdmin()) {
+            $_SESSION['error_message'] = 'Accès non autorisé.';
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = (int)($_POST['id'] ?? 0);
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $admin = (int)($_POST['admin'] ?? 0);
+            
+            if ($id <= 0 || empty($username) || empty($email)) {
+                $_SESSION['error_message'] = 'Données invalides.';
+                header('Location: /view/front/gestion-utilisateurs.php');
+                exit();
+            }
+            
+            $result = $this->updateUser($id, $username, $email, $admin);
+            
+            if ($result['success']) {
+                $_SESSION['success_message'] = $result['message'];
+            } else {
+                $_SESSION['error_message'] = $result['message'];
+            }
+        }
+
+        header('Location: /view/front/gestion-utilisateurs.php');
+        exit();
+    }
+
+    // GESTION ADMIN - Gérer la suppression d'un utilisateur (requiert admin)
+    public function handleDeleteUser() {
+        if (!$this->isAdmin()) {
+            $_SESSION['error_message'] = 'Accès non autorisé.';
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = (int)($_POST['id'] ?? 0);
+            
+            if ($id <= 0) {
+                $_SESSION['error_message'] = 'ID utilisateur invalide.';
+                header('Location: /view/front/gestion-utilisateurs.php');
+                exit();
+            }
+            
+            $result = $this->deleteUser($id);
+            
+            if ($result['success']) {
+                $_SESSION['success_message'] = $result['message'];
+            } else {
+                $_SESSION['error_message'] = $result['message'];
+            }
+        }
+
+        header('Location: /view/front/gestion-utilisateurs.php');
+        exit();
+    }
+    
+    // AUTHENTIFICATION - Gérer la connexion
+    public function handleLogin() {
+        // Vérifier que c'est une requête POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        // Validation
+        if (empty($username) || empty($password)) {
+            $_SESSION['login_error'] = 'Veuillez remplir tous les champs.';
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        // Tentative de connexion
+        $result = $this->login($username, $password);
+
+        if (!$result['success']) {
+            $_SESSION['login_error'] = $result['message'];
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        // Connexion réussie - redirection vers home
+        header('Location: /view/front/home.php');
+        exit();
+    }
+
+    // AUTHENTIFICATION - Gérer la déconnexion
+    public function handleLogout() {
+        $this->logout();
+        header('Location: /view/front/home.php');
+        exit();
+    }
+
+    // AUTHENTIFICATION - Gérer le changement de mot de passe
+    public function handleChangePassword() {
+        // Vérifier que l'utilisateur est connecté
+        if (!$this->isLoggedIn()) {
+            header('Location: /view/front/home.php');
+            exit();
+        }
+
+        // Vérifier que c'est une requête POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /view/front/espace-personnel.php');
+            exit();
+        }
+
+        $currentUser = $this->getCurrentUser();
+        $currentPassword = $_POST['current_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+
+        // Validation
+        if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+            $_SESSION['error_message'] = 'Tous les champs sont obligatoires.';
+            header('Location: /view/front/espace-personnel.php');
+            exit();
+        }
+
+        if (strlen($newPassword) < 6) {
+            $_SESSION['error_message'] = 'Le nouveau mot de passe doit contenir au moins 6 caractères.';
+            header('Location: /view/front/espace-personnel.php');
+            exit();
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            $_SESSION['error_message'] = 'Les mots de passe ne correspondent pas.';
+            header('Location: /view/front/espace-personnel.php');
+            exit();
+        }
+
+        // Vérifier le mot de passe actuel
+        if (!$this->user->getByUsername($currentUser['username']) || !$this->user->verifyPassword($currentPassword)) {
+            $_SESSION['error_message'] = 'Le mot de passe actuel est incorrect.';
+            header('Location: /view/front/espace-personnel.php');
+            exit();
+        }
+
+        // Changer le mot de passe
+        $result = $this->changePassword($currentUser['id'], $newPassword);
+
+        if ($result['success']) {
+            $_SESSION['success_message'] = 'Mot de passe modifié avec succès.';
+        } else {
+            $_SESSION['error_message'] = $result['message'];
+        }
+
+        header('Location: /view/front/espace-personnel.php');
+        exit();
+    }
+}
+
+// Gestion des actions si appelé directement
+if (basename($_SERVER['PHP_SELF']) === 'users.php' && isset($_GET['action'])) {
+    $controller = new UserController();
+    
+    switch ($_GET['action']) {
+        case 'login':
+            $controller->handleLogin();
+            break;
+        case 'logout':
+            $controller->handleLogout();
+            break;
+        case 'change_password':
+            $controller->handleChangePassword();
+            break;
+        case 'create':
+            $controller->handleCreateUser();
+            break;
+        case 'update':
+            $controller->handleUpdateUser();
+            break;
+        case 'delete':
+            $controller->handleDeleteUser();
+            break;
+        default:
+            header('Location: /view/front/home.php');
+            exit();
+    }
 }
 ?>

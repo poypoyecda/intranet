@@ -24,10 +24,10 @@ unset($_SESSION['login_error']);
                     Liens utiles
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Site Jade Projects</a></li>
+                    <li><a target="_blank" class="dropdown-item" href="https://jadeprojects.fr">Site Jade Projects</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Messagerie</a></li>
-                    <li><a class="dropdown-item" href="#">Calendrieer</a></li>
+                    <li><a target="_blank" class="dropdown-item" href="https://node184-eu.n0c.com/webmail/?_task=mail&_mbox=INBOX">Messagerie</a></li>
+                    <li><a target="_blank" class="dropdown-item" href="https://calendar.google.com/calendar/u/0/r/month?pli=1">Calendrier</a></li>
                 </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -42,8 +42,16 @@ unset($_SESSION['login_error']);
                 </ul>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="#">Espace Personnel</a>
-                </li>        
+                <a class="nav-link" href="/view/front/espace-personnel.php">Espace Personnel</a>
+                </li>
+                <?php if ($currentUser && $currentUser['admin'] == 1): ?>
+                <li class="nav-item">
+                <a class="nav-link" href="/view/front/gestion-utilisateurs.php">Gestion des utilisateurs</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/view/front/gestion-citations.php">Gestion des citations</a>
+                </li>
+                <?php endif; ?>
             </ul>
             <?php else: ?>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
@@ -55,7 +63,7 @@ unset($_SESSION['login_error']);
                         <span class="fw-semibold text-dark" style="font-size: 16px;">
                             Bonjour, <?php echo htmlspecialchars($currentUser['username']); ?>
                         </span>
-                        <a href="/controller/auth_logout.php" class="btn btn-danger">
+                        <a href="/controller/users.php?action=logout" class="btn btn-danger">
                             Déconnexion
                         </a>
                     </div>
@@ -73,7 +81,7 @@ unset($_SESSION['login_error']);
                                     </div>
                                 <?php endif; ?>
                                 
-                                <form method="POST" action="/controller/auth_login.php">
+                                <form method="POST" action="/controller/users.php?action=login">
                                     <div class="mb-3">
                                         <label class="form-label">Nom d'utilisateur</label>
                                         <input type="text" name="username" class="form-control" required autofocus>
