@@ -13,6 +13,12 @@ unset($_SESSION['login_error']);
     <div class="container-fluid1">
         <img src="../../assets/images/feuille.png" alt="Feuille logo" width="70" height="70" class="d-inline-block align-text-top" style="margin-left: 20px;">
         <h1 class="jadenet">Jade.Net</h1>
+        
+        <!-- Bouton hamburger pour mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <?php if ($isLoggedIn): ?>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -37,7 +43,8 @@ unset($_SESSION['login_error']);
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Liste des comptes</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Budget</a></li>            
+                    <li><a class="dropdown-item" href="#">Catégories<br>et Budgets</a></li>
+                    <li><hr class="dropdown-divider"></li>            
                     <li><a class="dropdown-item" href="#">Echeanciers</a></li>
                 </ul>
                 </li>
@@ -48,7 +55,9 @@ unset($_SESSION['login_error']);
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/view/front/gestion-utilisateurs.php">Gestion des utilisateurs</a></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="/view/front/gestion-roles.php">Gestion des rôles</a></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="/view/front/gestion-citations.php">Gestion des citations</a></li>
                 </ul>
                 </li>

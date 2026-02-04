@@ -21,6 +21,26 @@
     color: #000000 !important;
 }
 
+.dropdown-item:hover {
+    background: linear-gradient(135deg, #a0ffc2 0%, #42ab59, #009626 100%) !important;
+    color: #ffffff !important;
+}
+
+.navbar-toggler {
+    border: 2px solid #1a1a1a;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 15px;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 150, 38, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 .jadenet {
     font-family: 'Georgia', 'Times New Roman', serif;
     font-size: 48px;
@@ -108,3 +128,285 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: inline-block;
 }
+
+/* ========== RESPONSIVE MEDIA QUERIES ========== */
+
+/* Desktop mode Portrait (orientation portrait sur grand écran) */
+@media (orientation: portrait) and (min-width: 768px) {
+    .jadenet {
+        font-size: 36px;
+        margin-left: 15px;
+    }
+    
+    .container-fluid1 img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .container-fluid1 .nav-link {
+        font-size: 18px;
+        padding: 10px 15px;
+    }
+    
+    .container-fluid1 .nav-item {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    .d-flex.gap-3 {
+        flex-wrap: wrap;
+        gap: 0.5rem !important;
+        justify-content: flex-end;
+    }
+    
+    .d-flex.gap-3 a,
+    .d-flex.gap-3 span {
+        font-size: 14px !important;
+    }
+    
+    .btn-danger {
+        font-size: 14px;
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .citation {
+        max-width: 70%;
+        font-size: 16px;
+        margin-top: 10vh;
+    }
+    
+    .bodyhome::before {
+        top: 70px;
+        height: calc(100% - 70px);
+        background-size: 60%;
+    }
+}
+
+/* Tablette paysage et plus petit (iPad paysage, etc.) */
+@media (max-width: 991px) {
+    .navbar-toggler {
+        display: inline-block;
+    }
+    
+    .jadenet {
+        font-size: 32px;
+        margin-left: 10px;
+    }
+    
+    .container-fluid1 img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .container-fluid1 .nav-link {
+        font-size: 16px;
+        padding: 8px 12px;
+    }
+    
+    .container-fluid1 .nav-item {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+    
+    .citation {
+        max-width: 80%;
+        font-size: 16px;
+        padding: 15px;
+    }
+    
+    .page-title {
+        font-size: 24px;
+        padding: 12px 24px;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+/* Tablette portrait (iPad portrait, etc.) */
+@media (max-width: 767px) {
+    .container-fluid1 {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 10px;
+    }
+    
+    .navbar-toggler {
+        order: 3;
+        margin-right: 10px;
+    }
+    
+    .jadenet {
+        font-size: 28px;
+        margin-left: 5px;
+        order: 2;
+        flex: 1;
+        text-align: center;
+    }
+    
+    .container-fluid1 img {
+        width: 45px;
+        height: 45px;
+        order: 1;
+        margin-left: 10px;
+    }
+    
+    .navbar-collapse {
+        order: 4;
+        width: 100%;
+    }
+    
+    .container-fluid1 .nav-link {
+        font-size: 16px;
+        padding: 8px 10px;
+    }
+    
+    .container-fluid1 .nav-item {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    .citation {
+        max-width: 90%;
+        font-size: 15px;
+        padding: 12px;
+        margin-top: 8vh;
+    }
+    
+    .page-title {
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+    
+    .bodyhome::before {
+        top: 60px;
+        height: calc(100% - 60px);
+        background-size: 80%;
+    }
+    
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .d-flex.gap-3 {
+        gap: 0.5rem !important;
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .d-flex.flex-column.align-items-end {
+        margin-right: 10px !important;
+    }
+    
+    .d-flex.gap-3 a,
+    .d-flex.gap-3 span,
+    .d-flex.gap-3 .btn {
+        font-size: 14px !important;
+        white-space: nowrap;
+    }
+}
+
+/* Mobile paysage */
+@media (max-width: 575px) {
+    .container-fluid1 {
+        padding: 5px;
+    }
+    
+    .jadenet {
+        font-size: 22px;
+        margin-left: 0;
+    }
+    
+    .container-fluid1 img {
+        width: 35px;
+        height: 35px;
+        margin-left: 5px;
+    }
+    
+    .container-fluid1 .nav-link {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+    
+    .container-fluid1 .nav-item {
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    
+    .d-flex.flex-column.align-items-end {
+        margin-right: 5px !important;
+        width: 100%;
+    }
+    
+    .d-flex.gap-3 {
+        width: 100%;
+        align-items: stretch !important;
+    }
+    
+    .d-flex.gap-3 a,
+    .d-flex.gap-3 span,
+    .d-flex.gap-3 .btn {
+        font-size: 12px !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    .citation {
+        max-width: 95%;
+        font-size: 14px;
+        padding: 10px;
+        margin-top: 5vh;
+    }
+    
+    .page-title {
+        font-size: 18px;
+        padding: 8px 15px;
+    }
+    
+    .bodyhome::before {
+        top: 50px;
+        height: calc(100% - 50px);
+        background-size: cover;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .table {
+        font-size: 0.85rem;
+    }
+    
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Mobile portrait très petit */
+@media (max-width: 400px) {
+    .jadenet {
+        font-size: 18px;
+    }
+    
+    .container-fluid1 img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .citation {
+        font-size: 13px;
+        padding: 8px;
+    }
+    
+    .page-title {
+        font-size: 16px;
+        padding: 6px 12px;
+    }
+}
+
