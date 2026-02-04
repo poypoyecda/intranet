@@ -3,15 +3,24 @@
 
 USE intranet_db;
 
+-- Table des rôles
+CREATE TABLE IF NOT EXISTS role (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Table des utilisateurs
 CREATE TABLE IF NOT EXISTS utilisateur (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    admin BOOLEAN NOT NULL DEFAULT 0,
+    role_id INT NOT NULL DEFAULT 2,
     date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    date_modification DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    date_modification DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_utilisateur_role
+        FOREIGN KEY (role_id) REFERENCES role(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Table des citations
@@ -22,8 +31,13 @@ CREATE TABLE IF NOT EXISTS citation (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Insertion des rôles par défaut
+INSERT INTO role (id, nom) VALUES 
+(1, 'Administrateur'),
+(2, 'Utilisateur');
+
 -- Insertion d'un utilisateur admin de test (mot de passe: admin123)
-INSERT INTO utilisateur (username, password, email, admin) VALUES 
+INSERT INTO utilisateur (username, password, email, role_id) VALUES 
 ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@jadenet.local', 1);
 
 -- Insertion de quelques citations de test
