@@ -2,10 +2,12 @@
 // Controller Utilisateur - Gère la logique métier et les sessions
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../model/users.php';
+require_once __DIR__ . '/../controller/role.php';
 
 class UserController {
     private $db;
     private $user;
+    private $roleController;
 
     public function __construct() {
         // Démarrer la session si elle n'est pas déjà démarrée
@@ -16,10 +18,11 @@ class UserController {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->user = new User($this->db);
+        $this->roleController = new RoleController();
     }
 
     // CREATE - Créer un nouvel utilisateur
-    public function createUser($username, $password, $email, $admin = 0) {
+    public function createUser($username, $password, $email, $role_id = 2) {
         // Vérifier si le username existe déjà
         if ($this->user->usernameExists($username)) {
             return ['success' => false, 'message' => 'Ce nom d\'utilisateur existe déjà.'];
@@ -34,7 +37,7 @@ class UserController {
         $this->user->username = $username;
         $this->user->password = $password; // Sera hashé dans le model
         $this->user->email = $email;
-        $this->user->admin = $admin;
+        $this->user->role_id = $role_id;
 
         // Créer l'utilisateur
         if ($this->user->create()) {
@@ -57,7 +60,7 @@ class UserController {
                 'id' => $this->user->id,
                 'username' => $this->user->username,
                 'email' => $this->user->email,
-                'admin' => $this->user->admin,
+                'role_id' => $this->user->role_id,
                 'date_creation' => $this->user->date_creation,
                 'date_modification' => $this->user->date_modification
             ];
@@ -66,7 +69,7 @@ class UserController {
     }
 
     // UPDATE - Mettre à jour un utilisateur (edit)
-    public function updateUser($id, $username, $email, $admin) {
+    public function updateUser($id, $username, $email, $role_id) {
         // Récupérer l'utilisateur actuel
         if (!$this->user->getById($id)) {
             return ['success' => false, 'message' => 'Utilisateur introuvable.'];
@@ -85,7 +88,7 @@ class UserController {
         // Mettre à jour les propriétés
         $this->user->username = $username;
         $this->user->email = $email;
-        $this->user->admin = $admin;
+        $this->user->role_id = $role_id;
 
         if ($this->user->update()) {
             return ['success' => true, 'message' => 'Utilisateur mis à jour avec succès.'];
@@ -133,7 +136,7 @@ class UserController {
                 $_SESSION['user_id'] = $this->user->id;
                 $_SESSION['username'] = $this->user->username;
                 $_SESSION['email'] = $this->user->email;
-                $_SESSION['admin'] = $this->user->admin;
+                $_SESSION['role_id'] = $this->user->role_id;
                 $_SESSION['logged_in'] = true;
 
                 return ['success' => true, 'message' => 'Connexion réussie.'];
@@ -166,17 +169,17 @@ class UserController {
 
     // VÉRIFIER - Vérifier si l'utilisateur est admin
     public function isAdmin() {
-        return $this->isLoggedIn() && isset($_SESSION['admin']) && $_SESSION['admin'] == 1;
+        return $this->isLoggedIn() && isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1;
     }
 
     // OBTENIR - Obtenir les informations de l'utilisateur connecté
     public function getCurrentUser() {
         if ($this->isLoggedIn()) {
             return [
-                'id' => $_SESSION['user_id'],
-                'username' => $_SESSION['username'],
-                'email' => $_SESSION['email'],
-                'admin' => $_SESSION['admin']
+                'id' => $_SESSION['user_id'] ?? null,
+                'username' => $_SESSION['username'] ?? null,
+                'email' => $_SESSION['email'] ?? null,
+                'role_id' => $_SESSION['role_id'] ?? 2
             ];
         }
         return null;
@@ -194,7 +197,7 @@ class UserController {
             $username = trim($_POST['username'] ?? '');
             $password = $_POST['password'] ?? '';
             $email = trim($_POST['email'] ?? '');
-            $admin = (int)($_POST['admin'] ?? 0);
+            $role_id = (int)($_POST['role_id'] ?? 2);
             
             if (empty($username) || empty($password) || empty($email)) {
                 $_SESSION['error_message'] = 'Tous les champs sont requis.';
@@ -208,7 +211,7 @@ class UserController {
                 exit();
             }
             
-            $result = $this->createUser($username, $password, $email, $admin);
+            $result = $this->createUser($username, $password, $email, $role_id);
             
             if ($result['success']) {
                 $_SESSION['success_message'] = $result['message'];
@@ -233,7 +236,7 @@ class UserController {
             $id = (int)($_POST['id'] ?? 0);
             $username = trim($_POST['username'] ?? '');
             $email = trim($_POST['email'] ?? '');
-            $admin = (int)($_POST['admin'] ?? 0);
+            $role_id = (int)($_POST['role_id'] ?? 2);
             
             if ($id <= 0 || empty($username) || empty($email)) {
                 $_SESSION['error_message'] = 'Données invalides.';
@@ -241,7 +244,7 @@ class UserController {
                 exit();
             }
             
-            $result = $this->updateUser($id, $username, $email, $admin);
+            $result = $this->updateUser($id, $username, $email, $role_id);
             
             if ($result['success']) {
                 $_SESSION['success_message'] = $result['message'];
@@ -325,7 +328,6 @@ class UserController {
 
     // AUTHENTIFICATION - Gérer le changement de mot de passe
     public function handleChangePassword() {
-        // Vérifier que l'utilisateur est connecté
         if (!$this->isLoggedIn()) {
             header('Location: /view/front/home.php');
             exit();

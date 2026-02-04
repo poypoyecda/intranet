@@ -37,20 +37,18 @@ unset($_SESSION['login_error']);
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Liste des comptes</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Catégories de budget</a></li>            
-                    <li><a class="dropdown-item" href="#">Liste des écheanciers</a></li>
+                    <li><a class="dropdown-item" href="#">Budget</a></li>            
+                    <li><a class="dropdown-item" href="#">Echeanciers</a></li>
                 </ul>
                 </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/view/front/espace-personnel.php">Espace Personnel</a>
-                </li>
-                <?php if ($currentUser && $currentUser['admin'] == 1): ?>
+                <?php if ($currentUser && $currentUser['role_id'] == 1): ?>
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Administration
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/view/front/gestion-utilisateurs.php">Gestion des utilisateurs</a></li>
+                    <li><a class="dropdown-item" href="/view/front/gestion-roles.php">Gestion des rôles</a></li>
                     <li><a class="dropdown-item" href="/view/front/gestion-citations.php">Gestion des citations</a></li>
                 </ul>
                 </li>
@@ -63,6 +61,9 @@ unset($_SESSION['login_error']);
             <div class="d-flex flex-column align-items-end" style="margin-right: 20px; position: relative;">
                 <?php if ($isLoggedIn && $currentUser): ?>
                     <div class="d-flex align-items-center gap-3">
+                        <a href="/view/front/espace-personnel.php" class="nav-link" style="font-size: 20px; font-weight: 500; color: #1a1a1a;">
+                            Espace Personnel
+                        </a>
                         <span class="fw-semibold text-dark" style="font-size: 16px;">
                             Bonjour, <?php echo htmlspecialchars($currentUser['username']); ?>
                         </span>

@@ -8,7 +8,7 @@ class User {
     public $username;
     public $password;
     public $email;
-    public $admin;
+    public $role_id;
     public $date_creation;
     public $date_modification;
 
@@ -19,8 +19,8 @@ class User {
     // CREATE - Créer un nouvel utilisateur
     public function create() {
         $query = "INSERT INTO " . $this->table_name . " 
-                  (username, password, email, admin) 
-                  VALUES (:username, :password, :email, :admin)";
+                  (username, password, email, role_id) 
+                  VALUES (:username, :password, :email, :role_id)";
         
         $stmt = $this->conn->prepare($query);
         
@@ -31,7 +31,7 @@ class User {
         $stmt->bindParam(':username', $this->username);
         $stmt->bindParam(':password', $hashed_password);
         $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':admin', $this->admin);
+        $stmt->bindParam(':role_id', $this->role_id);
         
         if ($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
@@ -41,11 +41,13 @@ class User {
         return false;
     }
 
-    // READ - Récupérer tous les utilisateurs
+    // READ - Récupérer tous les utilisateurs avec leur rôle
     public function getAll() {
-        $query = "SELECT id, username, email, admin, date_creation, date_modification 
-                  FROM " . $this->table_name . " 
-                  ORDER BY id ASC";
+        $query = "SELECT u.id, u.username, u.email, u.role_id, r.nom as role_nom, 
+                         u.date_creation, u.date_modification 
+                  FROM " . $this->table_name . " u
+                  LEFT JOIN role r ON u.role_id = r.id
+                  ORDER BY u.id ASC";
         
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -55,9 +57,11 @@ class User {
 
     // READ - Récupérer un utilisateur par ID
     public function getById($id) {
-        $query = "SELECT id, username, email, admin, date_creation, date_modification 
-                  FROM " . $this->table_name . " 
-                  WHERE id = :id LIMIT 1";
+        $query = "SELECT u.id, u.username, u.email, u.role_id, r.nom as role_nom,
+                         u.date_creation, u.date_modification 
+                  FROM " . $this->table_name . " u
+                  LEFT JOIN role r ON u.role_id = r.id
+                  WHERE u.id = :id LIMIT 1";
         
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
@@ -69,7 +73,7 @@ class User {
             $this->id = $row['id'];
             $this->username = $row['username'];
             $this->email = $row['email'];
-            $this->admin = $row['admin'];
+            $this->role_id = $row['role_id'];
             $this->date_creation = $row['date_creation'];
             $this->date_modification = $row['date_modification'];
             return true;
@@ -80,9 +84,11 @@ class User {
 
     // READ - Récupérer un utilisateur par username
     public function getByUsername($username) {
-        $query = "SELECT id, username, password, email, admin, date_creation, date_modification 
-                  FROM " . $this->table_name . " 
-                  WHERE username = :username LIMIT 1";
+        $query = "SELECT u.id, u.username, u.password, u.email, u.role_id, r.nom as role_nom,
+                         u.date_creation, u.date_modification 
+                  FROM " . $this->table_name . " u
+                  LEFT JOIN role r ON u.role_id = r.id
+                  WHERE u.username = :username LIMIT 1";
         
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':username', $username);
@@ -95,7 +101,7 @@ class User {
             $this->username = $row['username'];
             $this->password = $row['password']; // Hash stocké
             $this->email = $row['email'];
-            $this->admin = $row['admin'];
+            $this->role_id = $row['role_id'];
             $this->date_creation = $row['date_creation'];
             $this->date_modification = $row['date_modification'];
             return true;
@@ -109,7 +115,7 @@ class User {
         $query = "UPDATE " . $this->table_name . " 
                   SET username = :username, 
                       email = :email, 
-                      admin = :admin 
+                      role_id = :role_id 
                   WHERE id = :id";
         
         $stmt = $this->conn->prepare($query);
@@ -117,7 +123,7 @@ class User {
         // Bind des paramètres
         $stmt->bindParam(':username', $this->username);
         $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':admin', $this->admin);
+        $stmt->bindParam(':role_id', $this->role_id);
         $stmt->bindParam(':id', $this->id);
         
         return $stmt->execute();

@@ -2,8 +2,10 @@
 session_start();
 
 require_once __DIR__ . '/../../controller/users.php';
+require_once __DIR__ . '/../../controller/role.php';
 
 $userController = new UserController();
+$roleController = new RoleController();
 
 // Vérifier si l'utilisateur est connecté et admin
 if (!$userController->isLoggedIn() || !$userController->isAdmin()) {
@@ -11,8 +13,9 @@ if (!$userController->isLoggedIn() || !$userController->isAdmin()) {
     exit();
 }
 
-// Récupérer tous les utilisateurs
+// Récupérer tous les utilisateurs et rôles
 $users = $userController->getAllUsers();
+$roles = $roleController->getAllRoles();
 
 $successMessage = $_SESSION['success_message'] ?? null;
 $errorMessage = $_SESSION['error_message'] ?? null;
@@ -57,7 +60,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                                 <th>ID</th>
                                 <th>Nom d'utilisateur</th>
                                 <th>Email</th>
-                                <th>Statut</th>
+                                <th>Rôle</th>
                                 <th>Date de création</th>
                                 <th>Dernière modification</th>
                                 <th>Actions</th>
@@ -70,17 +73,17 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                                 <td><?php echo htmlspecialchars($user['username']); ?></td>
                                 <td><?php echo htmlspecialchars($user['email']); ?></td>
                                 <td>
-                                    <?php if ($user['admin'] == 1): ?>
-                                        <span class="badge bg-danger">Admin</span>
+                                    <?php if ($user['role_id'] == 1): ?>
+                                        <span class="badge bg-danger"><?php echo htmlspecialchars($user['role_nom']); ?></span>
                                     <?php else: ?>
-                                        <span class="badge bg-success">Utilisateur</span>
+                                        <span class="badge bg-success"><?php echo htmlspecialchars($user['role_nom']); ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($user['date_creation'])); ?></td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($user['date_modification'])); ?></td>
                                 <td>
                                     <button class="btn btn-sm btn-primary" 
-                                            onclick="editUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['username'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($user['email'], ENT_QUOTES); ?>', <?php echo $user['admin']; ?>)">
+                                            onclick="editUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['username'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($user['email'], ENT_QUOTES); ?>', <?php echo $user['role_id']; ?>)">
                                         <i class="bi bi-pencil"></i> Modifier
                                     </button>
                                     <button class="btn btn-sm btn-danger" 
@@ -124,10 +127,13 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Statut</label>
-                            <select name="admin" class="form-select">
-                                <option value="0">Utilisateur</option>
-                                <option value="1">Administrateur</option>
+                            <label class="form-label">Rôle</label>
+                            <select name="role_id" class="form-select">
+                                <?php foreach ($roles as $role): ?>
+                                    <option value="<?php echo $role['id']; ?>" <?php echo $role['id'] == 2 ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($role['nom']); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -162,10 +168,13 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Statut</label>
-                            <select name="admin" id="edit_admin" class="form-select">
-                                <option value="0">Utilisateur</option>
-                                <option value="1">Administrateur</option>
+                            <label class="form-label">Rôle</label>
+                            <select name="role_id" id="edit_role_id" class="form-select">
+                                <?php foreach ($roles as $role): ?>
+                                    <option value="<?php echo $role['id']; ?>">
+                                        <?php echo htmlspecialchars($role['nom']); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -202,11 +211,11 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
     </div>
     
     <script>
-        function editUser(id, username, email, admin) {
+        function editUser(id, username, email, role_id) {
             document.getElementById('edit_user_id').value = id;
             document.getElementById('edit_username').value = username;
             document.getElementById('edit_email').value = email;
-            document.getElementById('edit_admin').value = admin;
+            document.getElementById('edit_role_id').value = role_id;
             
             var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
             modal.show();
